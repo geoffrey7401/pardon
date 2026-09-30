@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veux-tu me pardonner ?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --rose: #e91e63;
+      --rose-light: #fce4ec;
+      --rose-dark: #c2185b;
+      --pink: #ff80ab;
+      --bg: #fff5f7;
+      --text: #4a1942;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #fff5f7 0%, #fce4ec 50%, #f8bbd9 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      color: var(--text);
+    }
+    .container {
+      max-width: 480px;
+      width: 92%;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(233, 30, 99, 0.2);
+      padding: 40px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .container::before {
+      content: '🌹';
+      position: absolute;
+      font-size: 120px;
+      opacity: 0.06;
+      top: -20px;
+      right: -20px;
+      transform: rotate(15deg);
+    }
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.4rem;
+      color: var(--rose);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .subtitle { font-size: 1rem; color: #888; margin-bottom: 28px; }
+    .page { display: none; animation: fadeIn 0.5s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .name-input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #f8bbd9;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      margin-bottom: 24px;
+      transition: border-color 0.3s;
+      text-align: center;
+    }
+    .name-input:focus { border-color: var(--rose); }
+    .buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      min-height: 60px;
+      margin-top: 10px;
+    }
+    .btn {
+      padding: 14px 32px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-family: inherit;
+      min-width: 120px;
+    }
+    .btn-yes {
+      background: linear-gradient(135deg, var(--rose), var(--rose-dark));
+      color: white;
+      box-shadow: 0 8px 20px rgba(233, 30, 99, 0.35);
+    }
+    .btn-yes:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 28px rgba(233, 30, 99, 0.45);
+    }
+    .btn-no {
+      background: #f5f5f5;
+      color: #666;
+      border: 2px solid #ddd;
+      position: absolute;
+      transition: all 0.15s ease;
+      z-index: 10;
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #ff80ab, #f48fb1);
+      color: white;
+      box-shadow: 0 8px 20px rgba(255, 128, 171, 0.35);
+    }
+    .btn-secondary:hover { transform: scale(1.05); }
+    .btn-fault {
+      background: linear-gradient(135deg, #7e57c2, #5e35b1);
+      color: white;
+      box-shadow: 0 8px 20px rgba(126, 87, 194, 0.35);
+    }
+    .btn-fault:hover { transform: scale(1.05); }
+    .message-box {
+      background: var(--rose-light);
+      border-radius: 20px;
+      padding: 28px 20px;
+      margin-top: 10px;
+    }
+    .message-box h2 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.9rem;
+      color: var(--rose);
+      margin-bottom: 10px;
+    }
+    .message-box p { font-size: 1.05rem; line-height: 1.5; color: #555; }
+    .rose-garden {
+      font-size: 2.8rem;
+      letter-spacing: 8px;
+      margin: 20px 0;
+      line-height: 1.6;
+    }
+    .pride-text {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.2rem;
+      color: var(--rose);
+      margin: 16px 0;
+    }
+    .small { font-size: 0.85rem; color: #999; margin-top: 20px; }
+    .petal {
+      position: fixed;
+      font-size: 18px;
+      opacity: 0.4;
+      animation: fall linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.5; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0.1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="page-name" class="page active">
+      <h1>Hey toi...</h1>
+      <p class="subtitle">Avant de commencer, dis-moi ton prénom</p>
+      <input type="text" id="userName" class="name-input" placeholder="Ton prénom..." maxlength="30" autocomplete="off">
+      <div class="buttons">
+        <button class="btn btn-yes" onclick="startQuiz()">C'est parti</button>
+      </div>
+    </div>
+    <div id="page-pardon" class="page">
+      <h1>Veux-tu me<br>pardonner ?</h1>
+      <p class="subtitle">Sois honnête...</p>
+      <div class="buttons" id="pardon-buttons">
+        <button class="btn btn-yes" onclick="goToImportant()">Oui</button>
+        <button class="btn btn-no" id="btnNo" onmouseenter="flee(this)" ontouchstart="flee(this)">Non</button>
+      </div>
+      <p class="small">Le bouton « Non » a peur de toi...</p>
+    </div>
+    <div id="page-important" class="page">
+      <h1>Suis-je important<br>pour toi ?</h1>
+      <p class="subtitle">Choisis avec ton cœur</p>
+      <div class="buttons" style="flex-direction: column; gap: 14px;">
+        <button class="btn btn-secondary" onclick="chooseSaturday()">Je veux samedi</button>
+        <button class="btn btn-fault" onclick="chooseFaults()">Te rends-tu compte de tes défauts ?</button>
+      </div>
+    </div>
+    <div id="page-samedi" class="page">
+      <div class="message-box">
+        <h2>Félicitations !</h2>
+        <p>Mais je ne ferai <strong>aucune activité</strong> 😕</p>
+        <p style="margin-top:12px; font-size:0.95rem; color:#888;">Tu savais que j'allais dire ça, hein ?</p>
+      </div>
+      <div class="buttons" style="margin-top: 24px;">
+        <button class="btn btn-yes" onclick="goToImportant()">Retour</button>
+      </div>
+    </div>
+    <div id="page-roses" class="page">
+      <div class="rose-garden">
+        🌹 🌹 🌹<br>
+        🌹 🌹 🌹<br>
+        🌹 🌹 🌹
+      </div>
+      <p class="pride-text">Je suis fière de toi</p>
+      <p style="color:#666; font-size:1.05rem; margin-top:8px;">Tu as eu le courage d'admettre tes défauts.<br>C'est ça, la vraie force.</p>
+      <div class="buttons" style="margin-top: 28px;">
+        <button class="btn btn-yes" onclick="restart()">Recommencer</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    const WEBHOOK = 'https://webhook.site/70ad5838-9339-427f-beb2-e7475869531d';
+    let userName = 'Anonyme';
+    function createPetals() {
+      const petals = ['🌸', '🌺', '🌷', '💮', '🏵️'];
+      for (let i = 0; i < 12; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        petal.textContent = petals[Math.floor(Math.random() * petals.length)];
+        petal.style.left = Math.random() * 100 + 'vw';
+        petal.style.animationDuration = (8 + Math.random() * 12) + 's';
+        petal.style.animationDelay = (Math.random() * 8) + 's';
+        document.body.appendChild(petal);
+      }
+    }
+    createPetals();
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+    function startQuiz() {
+      const input = document.getElementById('userName').value.trim();
+      userName = input || 'Anonyme';
+      logClick('A commencé le quiz');
+      showPage('page-pardon');
+    }
+    function flee(btn) {
+      const container = document.getElementById('pardon-buttons');
+      const maxX = container.offsetWidth - btn.offsetWidth - 10;
+      const maxY = 80;
+      const newX = Math.random() * Math.max(maxX, 50);
+      const newY = Math.random() * maxY - 20;
+      btn.style.left = newX + 'px';
+      btn.style.top = newY + 'px';
+      logClick('A essayé de cliquer sur NON (bouton a fui)');
+    }
+    function goToImportant() {
+      logClick('A cliqué sur OUI → Pardon accepté');
+      showPage('page-important');
+    }
+    function chooseSaturday() {
+      logClick('A cliqué sur « Je veux samedi »');
+      showPage('page-samedi');
+    }
+    function chooseFaults() {
+      logClick('A cliqué sur « Te rends-tu compte de tes défauts ? » → Page roses');
+      showPage('page-roses');
+    }
+    function restart() {
+      logClick('A recommencé');
+      document.getElementById('userName').value = '';
+      userName = 'Anonyme';
+      const btnNo = document.getElementById('btnNo');
+      btnNo.style.left = '';
+      btnNo.style.top = '';
+      showPage('page-name');
+    }
+    async function logClick(action) {
+      const data = {
+        prenom: userName,
+        action: action,
+        timestamp: new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+        userAgent: navigator.userAgent.substring(0, 120),
+        page: window.location.href
+      };
+      try {
+        await fetch(WEBHOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+          mode: 'no-cors'
+        });
+      } catch (e) {
+        console.log('Tracking:', data);
+      }
+    }
+  </script>
+</body>
+</html>
